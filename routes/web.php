@@ -11,10 +11,21 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+//
+//Auth::routes();
+//
+//Route::get('/home', 'HomeController@index');
+
+
+
+Route::group(['middleware' => 'admin'], function()
+{
+    // Backpack\CRUD: Define the resources for the entities you want to CRUD.
+    CRUD::resource('client', 'Admin\ClientCrudController');
+    CRUD::resource('bank', 'Admin\BankCrudController');
+
+    // [...] other routes
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
