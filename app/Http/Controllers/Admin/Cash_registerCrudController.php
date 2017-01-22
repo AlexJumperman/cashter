@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\ClientRequest as StoreRequest;
-use App\Http\Requests\ClientRequest as UpdateRequest;
+use App\Http\Requests\Cash_registerRequest as StoreRequest;
+use App\Http\Requests\Cash_registerRequest as UpdateRequest;
 
-class ClientCrudController extends CrudController
+class Cash_registerCrudController extends CrudController
 {
 
     public function setUp()
@@ -19,9 +19,9 @@ class ClientCrudController extends CrudController
 		| BASIC CRUD INFORMATION
 		|--------------------------------------------------------------------------
 		*/
-        $this->crud->setModel("App\Models\Client");
-        $this->crud->setRoute("client");
-        $this->crud->setEntityNameStrings('Клиент', 'Клиенты');
+        $this->crud->setModel("App\Models\Cash_register");
+        $this->crud->setRoute("cash_register");
+        $this->crud->setEntityNameStrings('Аппарат', 'Аппараты');
 
         /*
 		|--------------------------------------------------------------------------
@@ -37,26 +37,47 @@ class ClientCrudController extends CrudController
         // $this->crud->removeField('name', 'update/create/both');
         // $this->crud->removeFields($array_of_names, 'update/create/both');
         $this->crud->addField([
-            'type' => 'select',
-            'name' => 'client_type',
-            'label' => 'Тип клиента',
-            'entity' => 'client_type',
-            'attribute' => 'type',
-            'model' => 'App\ClientType'
+            'type' => 'select2',
+            'name' => 'contract_id',
+            'label' => 'Номер договора',
+            'entity' => 'contract_id',
+            'attribute' => 'contract_id',
+            'model' => 'App\Models\Contract'
         ]);
-        $this->crud->addField(['name' => 'chief_fio', 'label' => 'ФИО директора']);
-        $this->crud->addField(['name' => 'company_title', 'label' => 'Название компании']);
-        $this->crud->addField(['name' => 'code', 'label' => 'Код']);
-        $this->crud->addField(['name' => 'phone', 'label' => 'Телефон']);
-        $this->crud->addField(['name' => 'address_defacto', 'label' => 'Фактический адрес']);
-        $this->crud->addField(['name' => 'address_deuro', 'label' => 'Юридический адрес']);
+
+        $this->crud->addField(['name' => 'title', 'label' => 'Наименование']);
+
+        $this->crud->addField([
+            'name' => 'date_creation',
+            'label' => 'Дата производства',
+            'type' => 'date_picker',
+            'date_picker_options' => [
+                'todayBtn' => true,
+                'format' => 'dd-mm-yyyy',
+                'language' => 'ru'
+            ]
+        ]);
+
+        $this->crud->addField([
+            'name' => 'date_registration',
+            'label' => 'Дата регистрации',
+            'type' => 'date_picker',
+            'date_picker_options' => [
+                'todayBtn' => true,
+                'format' => 'dd-mm-yyyy',
+                'language' => 'ru'
+            ]
+        ]);
+
+        $this->crud->addField(['name' => 'address', 'label' => 'Адрес']);
+
         $this->crud->addField([
             'type' => 'select2',
-            'name' => 'bank_id',
-            'label' => 'Банк',
-            'entity' => 'bank_id',
-            'attribute' => 'title',
-            'model' => 'App\Models\Bank'
+            'name' => 'tariff_id',
+            'label' => 'Тариф',
+            'entity' => 'tariff_id',
+            'attribute' => 'rate',
+            'model' => 'App\Models\Tariff'
         ]);
 
         // ------ CRUD COLUMNS
@@ -66,14 +87,12 @@ class ClientCrudController extends CrudController
         // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
-        $this->crud->removeColumns(['address_defacto', 'address_deuro', 'bank_id']);
-
-        $this->crud->setColumnDetails('client_type', ['label' => 'Тип клиента', 'type' => "model_function", 'function_name' => 'get_client_type']);
-        $this->crud->setColumnDetails('chief_fio', ['label' => 'ФИО директора']);
-        $this->crud->setColumnDetails('company_title', ['label' => 'Название компании']);
-        $this->crud->setColumnDetails('code', ['label' => 'Код']);
-        $this->crud->setColumnDetails('phone', ['label' => 'Телефон']);
-
+        $this->crud->removeColumn('contract_id');
+        $this->crud->setColumnDetails('title', ['label' => 'Наименование']);
+        $this->crud->setColumnDetails('date_creation', ['label' => 'Дата производства']);
+        $this->crud->setColumnDetails('date_registration', ['label' => 'Дата регистрации']);
+        $this->crud->setColumnDetails('address', ['label' => 'Адрес']);
+        $this->crud->setColumnDetails('tariff_id', ['label' => 'Тариф', 'type' => "model_function", 'function_name' => 'get_tariff']);
 
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
@@ -84,9 +103,8 @@ class ClientCrudController extends CrudController
         // $this->crud->removeButtonFromStack($name, $stack);
 
         // ------ CRUD ACCESS
-         $this->crud->allowAccess(['list', 'create', 'update', 'show', 'delete']);
-//         $this->crud->denyAccess(['list', 'create', 'update', 'reorder', 'delete']);
-
+        // $this->crud->allowAccess(['list', 'create', 'update', 'reorder', 'delete']);
+        // $this->crud->denyAccess(['list', 'create', 'update', 'reorder', 'delete']);
 
         // ------ CRUD REORDER
         // $this->crud->enableReorder('label_name', MAX_TREE_LEVEL);

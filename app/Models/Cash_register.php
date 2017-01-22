@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 
-class Client extends Model
+class Cash_register extends Model
 {
     use CrudTrait;
 
@@ -15,12 +15,11 @@ class Client extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-    //protected $table = 'clients';
+    //protected $table = 'cash_registers';
     //protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-     protected $fillable = ['client_type', 'chief_fio', 'company_title', 'code', 'phone', 'email', 'address_defacto',
-                            'address_deuro', 'bank_id'];
+     protected $fillable = ['contract_id', 'title', 'date_creation', 'date_registration', 'address', 'tariff_id'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -29,18 +28,18 @@ class Client extends Model
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function get_client_type()
+    public function get_tariff()
     {
-        return $this->client_type()->first()->type;
+        return $this->tariff()->first()->rate;
     }
     /*
 	|--------------------------------------------------------------------------
 	| RELATIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function client_type()
+    public function tariff()
     {
-        return $this->belongsTo('App\ClientType', 'client_type');
+        return $this->belongsTo('App\Models\Tariff');
     }
     /*
 	|--------------------------------------------------------------------------

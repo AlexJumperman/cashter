@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\ClientRequest as StoreRequest;
-use App\Http\Requests\ClientRequest as UpdateRequest;
+use App\Http\Requests\TariffRequest as StoreRequest;
+use App\Http\Requests\TariffRequest as UpdateRequest;
 
-class ClientCrudController extends CrudController
+class TariffCrudController extends CrudController
 {
 
     public function setUp()
@@ -19,9 +19,9 @@ class ClientCrudController extends CrudController
 		| BASIC CRUD INFORMATION
 		|--------------------------------------------------------------------------
 		*/
-        $this->crud->setModel("App\Models\Client");
-        $this->crud->setRoute("client");
-        $this->crud->setEntityNameStrings('Клиент', 'Клиенты');
+        $this->crud->setModel("App\Models\Tariff");
+        $this->crud->setRoute("tariff");
+        $this->crud->setEntityNameStrings('Тариф', 'Тарифы');
 
         /*
 		|--------------------------------------------------------------------------
@@ -36,28 +36,7 @@ class ClientCrudController extends CrudController
         // $this->crud->addFields($array_of_arrays, 'update/create/both');
         // $this->crud->removeField('name', 'update/create/both');
         // $this->crud->removeFields($array_of_names, 'update/create/both');
-        $this->crud->addField([
-            'type' => 'select',
-            'name' => 'client_type',
-            'label' => 'Тип клиента',
-            'entity' => 'client_type',
-            'attribute' => 'type',
-            'model' => 'App\ClientType'
-        ]);
-        $this->crud->addField(['name' => 'chief_fio', 'label' => 'ФИО директора']);
-        $this->crud->addField(['name' => 'company_title', 'label' => 'Название компании']);
-        $this->crud->addField(['name' => 'code', 'label' => 'Код']);
-        $this->crud->addField(['name' => 'phone', 'label' => 'Телефон']);
-        $this->crud->addField(['name' => 'address_defacto', 'label' => 'Фактический адрес']);
-        $this->crud->addField(['name' => 'address_deuro', 'label' => 'Юридический адрес']);
-        $this->crud->addField([
-            'type' => 'select2',
-            'name' => 'bank_id',
-            'label' => 'Банк',
-            'entity' => 'bank_id',
-            'attribute' => 'title',
-            'model' => 'App\Models\Bank'
-        ]);
+        $this->crud->addField(['name' => 'rate', 'label' => 'Тариф']);
 
         // ------ CRUD COLUMNS
         // $this->crud->addColumn(); // add a single column, at the end of the stack
@@ -66,14 +45,7 @@ class ClientCrudController extends CrudController
         // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
-        $this->crud->removeColumns(['address_defacto', 'address_deuro', 'bank_id']);
-
-        $this->crud->setColumnDetails('client_type', ['label' => 'Тип клиента', 'type' => "model_function", 'function_name' => 'get_client_type']);
-        $this->crud->setColumnDetails('chief_fio', ['label' => 'ФИО директора']);
-        $this->crud->setColumnDetails('company_title', ['label' => 'Название компании']);
-        $this->crud->setColumnDetails('code', ['label' => 'Код']);
-        $this->crud->setColumnDetails('phone', ['label' => 'Телефон']);
-
+        $this->crud->setColumnDetails('rate', ['label' => 'Тариф']);
 
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
@@ -84,9 +56,8 @@ class ClientCrudController extends CrudController
         // $this->crud->removeButtonFromStack($name, $stack);
 
         // ------ CRUD ACCESS
-         $this->crud->allowAccess(['list', 'create', 'update', 'show', 'delete']);
-//         $this->crud->denyAccess(['list', 'create', 'update', 'reorder', 'delete']);
-
+        // $this->crud->allowAccess(['list', 'create', 'update', 'reorder', 'delete']);
+        // $this->crud->denyAccess(['list', 'create', 'update', 'reorder', 'delete']);
 
         // ------ CRUD REORDER
         // $this->crud->enableReorder('label_name', MAX_TREE_LEVEL);

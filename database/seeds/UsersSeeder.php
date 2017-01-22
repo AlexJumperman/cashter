@@ -12,7 +12,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        User::create(['name' => 'AlexJumperman', 'email' => 'alex.jumperman@gmail.com', 'password' => 'qwe123']);
-        User::create(['name' => 'Admin', 'email' => 'admin@gmail.com', 'password' => 'qwe123']);
+        User::create(['name' => 'AlexJumperman', 'email' => 'alex.jumperman@gmail.com', 'password' => bcrypt('qwe123')]);
+        User::create(['name' => 'Admin', 'email' => 'admin@gmail.com', 'password' => bcrypt('qwe123')]);
     }
 }
