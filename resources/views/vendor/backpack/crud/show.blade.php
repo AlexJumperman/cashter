@@ -15,20 +15,24 @@
 
 @section('content')
 	@if ($crud->hasAccess('list'))
-		<a href="{{ url($crud->route) }}"><i class="fa fa-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span class="text-lowercase">{{ $crud->entity_name_plural }}</span></a><br><br>
+		{{--<a href="{{ url($crud->route) }}"><i class="fa fa-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span class="text-lowercase">{{ $crud->entity_name_plural }}</span></a><br><br>--}}
 	@endif
 
 	<!-- Default box -->
 	  <div class="box">
-	    <div class="box-header with-border">
+	    {{--<div class="box-header with-border">
 	      <h3 class="box-title">
             {{ trans('backpack::crud.preview') }}
             <span class="text-lowercase">{{ $crud->entity_name }}</span>
           </h3>
-	    </div>
+	    </div>--}}
 	    <div class="box-body">
-	      {{ dump($entry) }}
+			@if ($entry instanceof App\Models\Client)
+				{{--{{ dump($entry) }}--}}
+				@include('vendor.backpack.crud.client')
+			@endif
 	    </div><!-- /.box-body -->
 	  </div><!-- /.box -->
+
 
 @endsection

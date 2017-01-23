@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
-// VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\ContractRequest as StoreRequest;
-use App\Http\Requests\ContractRequest as UpdateRequest;
+use App\Models\Register_type;
 
-class ContractCrudController extends CrudController
+// VALIDATION: change the requests to match your own file names if you need form validation
+use App\Http\Requests\Register_typeRequest as StoreRequest;
+use App\Http\Requests\Register_typeRequest as UpdateRequest;
+
+class Register_typeCrudController extends CrudController
 {
 
     public function setUp()
@@ -19,9 +21,9 @@ class ContractCrudController extends CrudController
 		| BASIC CRUD INFORMATION
 		|--------------------------------------------------------------------------
 		*/
-        $this->crud->setModel("App\Models\Contract");
-        $this->crud->setRoute("contract");
-        $this->crud->setEntityNameStrings('Договор', 'Договоры');
+        $this->crud->setModel("App\Models\Register_type");
+        $this->crud->setRoute("register_type");
+        $this->crud->setEntityNameStrings('Тип Аппарата', 'Типы Аппаратов');
 
         /*
 		|--------------------------------------------------------------------------
@@ -36,38 +38,7 @@ class ContractCrudController extends CrudController
         // $this->crud->addFields($array_of_arrays, 'update/create/both');
         // $this->crud->removeField('name', 'update/create/both');
         // $this->crud->removeFields($array_of_names, 'update/create/both');
-        $this->crud->addField([
-            'type' => 'select2',
-            'name' => 'client_id',
-            'label' => 'Клиент',
-            'entity' => 'client_id',
-            'attribute' => 'chief_fio',
-            'model' => 'App\Models\Client'
-        ]);
-
-        $this->crud->addField(['name' => 'contract_id', 'label' => 'Номер договора']);
-
-        $this->crud->addField([
-            'name' => 'date_start',
-            'label' => 'Дата заключения договора',
-            'type' => 'date_picker',
-            'date_picker_options' => [
-                'todayBtn' => true,
-                'format' => 'dd-mm-yyyy',
-                'language' => 'ru'
-            ]
-        ]);
-
-        $this->crud->addField([
-            'name' => 'date_end',
-            'label' => 'Дата окончания договора',
-            'type' => 'date_picker',
-            'date_picker_options' => [
-                'todayBtn' => true,
-                'format' => 'dd-mm-yyyy',
-                'language' => 'ru'
-            ]
-        ]);
+        $this->crud->addField(['name' => 'title', 'label' => 'Тип Аппарата']);
 
         // ------ CRUD COLUMNS
         // $this->crud->addColumn(); // add a single column, at the end of the stack
@@ -76,11 +47,7 @@ class ContractCrudController extends CrudController
         // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
-//        $this->crud->removeColumns(['client_id']);
-        $this->crud->setColumnDetails('client_id', ['label' => 'Клиент', 'type' => "model_function", 'function_name' => 'get_company_title']);
-        $this->crud->setColumnDetails('contract_id', ['label' => 'Номер договора']);
-        $this->crud->setColumnDetails('date_start', ['label' => 'Дата заключения договора']);
-        $this->crud->setColumnDetails('date_end', ['label' => 'Дата окончания договора']);
+        $this->crud->setColumnDetails('title', ['label' => 'Тип Аппарата']);
 
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;

@@ -29,5 +29,5 @@ Route::group(['middleware' => 'admin'], function()
     CRUD::resource('contract', 'Admin\ContractCrudController');
     CRUD::resource('tariff', 'Admin\TariffCrudController');
     CRUD::resource('cash_register', 'Admin\Cash_registerCrudController');
-
+    CRUD::resource('register_type', 'Admin\Register_typeCrudController');
 });

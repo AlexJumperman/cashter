@@ -19,7 +19,7 @@ class Cash_register extends Model
     //protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-     protected $fillable = ['contract_id', 'title', 'date_creation', 'date_registration', 'address', 'tariff_id'];
+     protected $fillable = ['contract_id', 'title_id', 'create_number', 'fiscal_number', 'date_creation', 'date_registration', 'address', 'tariff_id'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -32,6 +32,10 @@ class Cash_register extends Model
     {
         return $this->tariff()->first()->rate;
     }
+    public function get_register_type()
+    {
+        return $this->register_type()->first()->title;
+    }
     /*
 	|--------------------------------------------------------------------------
 	| RELATIONS
@@ -40,6 +44,11 @@ class Cash_register extends Model
     public function tariff()
     {
         return $this->belongsTo('App\Models\Tariff');
+    }
+
+    public function register_type()
+    {
+        return $this->belongsTo('App\Models\Register_type', 'title_id');
     }
     /*
 	|--------------------------------------------------------------------------

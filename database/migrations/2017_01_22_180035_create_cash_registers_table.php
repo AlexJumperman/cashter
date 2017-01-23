@@ -16,7 +16,9 @@ class CreateCashRegistersTable extends Migration
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contract_id');
-            $table->string('title');
+            $table->string('title_id');
+            $table->string('create_number');
+            $table->string('fiscal_number');
             $table->date('date_creation');
             $table->date('date_registration');
             $table->string('address')->nullable();

@@ -36,6 +36,9 @@
           <!-- Tariffs -->
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/tariff') }}"><i class="fa fa-usd text-center"></i> <span>Тарифы</span></a></li>
 
+          <!-- Cash Register Types -->
+          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/register_type') }}"><i class="fa fa-calculator text-center"></i> <span>Типы Аппаратов</span></a></li>
+
           {{--<li class="header text-center">---</li>--}}
 
           <!-- file manager -->

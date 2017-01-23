@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Models\Cash_register;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
 use App\Http\Requests\Cash_registerRequest as StoreRequest;
@@ -45,7 +46,17 @@ class Cash_registerCrudController extends CrudController
             'model' => 'App\Models\Contract'
         ]);
 
-        $this->crud->addField(['name' => 'title', 'label' => 'Наименование']);
+        $this->crud->addField([
+            'type' => 'select2',
+            'name' => 'title_id',
+            'label' => 'Наименование',
+            'entity' => 'title_id',
+            'attribute' => 'title',
+            'model' => 'App\Models\Register_type'
+        ]);
+
+        $this->crud->addField(['name' => 'create_number', 'label' => 'Заводской номер']);
+        $this->crud->addField(['name' => 'fiscal_number', 'label' => 'Фискальный номер']);
 
         $this->crud->addField([
             'name' => 'date_creation',
@@ -87,11 +98,13 @@ class Cash_registerCrudController extends CrudController
         // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
-        $this->crud->removeColumn('contract_id');
-        $this->crud->setColumnDetails('title', ['label' => 'Наименование']);
+        $this->crud->removeColumns(['contract_id', 'address']);
+        $this->crud->setColumnDetails('title_id', ['label' => 'Наименование', 'type' => "model_function", 'function_name' => 'get_register_type']);
+        $this->crud->setColumnDetails('create_number', ['label' => 'Заводской номер']);
+        $this->crud->setColumnDetails('fiscal_number', ['label' => 'Фискальный номер']);
         $this->crud->setColumnDetails('date_creation', ['label' => 'Дата производства']);
         $this->crud->setColumnDetails('date_registration', ['label' => 'Дата регистрации']);
-        $this->crud->setColumnDetails('address', ['label' => 'Адрес']);
+//        $this->crud->setColumnDetails('address', ['label' => 'Адрес']);
         $this->crud->setColumnDetails('tariff_id', ['label' => 'Тариф', 'type' => "model_function", 'function_name' => 'get_tariff']);
 
         // ------ CRUD BUTTONS
