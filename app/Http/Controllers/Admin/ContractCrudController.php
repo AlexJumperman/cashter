@@ -77,7 +77,7 @@ class ContractCrudController extends CrudController
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
 //        $this->crud->removeColumns(['client_id']);
-        $this->crud->setColumnDetails('client_id', ['label' => 'Клиент', 'type' => "model_function", 'function_name' => 'get_company_title']);
+        $this->crud->setColumnDetails('client_id', ['label' => 'Клиент', 'type' => "model_function", 'function_name' => 'getCompanyTitleAttribute']);
         $this->crud->setColumnDetails('contract_id', ['label' => 'Номер договора']);
         $this->crud->setColumnDetails('date_start', ['label' => 'Дата заключения договора']);
         $this->crud->setColumnDetails('date_end', ['label' => 'Дата окончания договора']);
@@ -133,13 +133,37 @@ class ContractCrudController extends CrudController
         // $this->crud->limit();
     }
 
+    public function create_with_client_default($client_id)
+    {
+        $this->crud->addField([
+            'type' => 'select2',
+            'name' => 'client_id',
+            'value' => $client_id,
+            'label' => 'Клиент',
+            'entity' => 'client_id',
+            'attribute' => 'chief_fio',
+            'model' => 'App\Models\Client'
+        ]);
+
+        $this->crud->hasAccessOrFail('create');
+
+        // prepare the fields you need to show
+        $this->data['crud'] = $this->crud;
+        $this->data['fields'] = $this->crud->getCreateFields();
+        $this->data['title'] = trans('backpack::crud.add').' '.$this->crud->entity_name;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::create', $this->data);
+    }
+
 	public function store(StoreRequest $request)
 	{
 		// your additional operations before save here
         $redirect_location = parent::storeCrud();
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
-        return $redirect_location;
+//        return $redirect_location;
+        return \Redirect::to(url(config('backpack.base.route_prefix', 'admin').'/client/'.$request['client_id']));
 	}
 
 	public function update(UpdateRequest $request)
@@ -148,6 +172,7 @@ class ContractCrudController extends CrudController
         $redirect_location = parent::updateCrud();
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
-        return $redirect_location;
+//        return $redirect_location;
+        return \Redirect::to(url(config('backpack.base.route_prefix', 'admin').'/client/'.$request['client_id']));
 	}
 }

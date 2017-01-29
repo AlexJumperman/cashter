@@ -8,6 +8,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\ClientRequest as StoreRequest;
 use App\Http\Requests\ClientRequest as UpdateRequest;
 
+use App\Models\Client;
+
 class ClientCrudController extends CrudController
 {
 
@@ -38,11 +40,11 @@ class ClientCrudController extends CrudController
         // $this->crud->removeFields($array_of_names, 'update/create/both');
         $this->crud->addField([
             'type' => 'select',
-            'name' => 'client_type',
+            'name' => 'client_type_id',
             'label' => 'Тип клиента',
-            'entity' => 'client_type',
+            'entity' => 'client_type_id',
             'attribute' => 'type',
-            'model' => 'App\ClientType'
+            'model' => 'App\ClientsType'
         ]);
         $this->crud->addField(['name' => 'chief_fio', 'label' => 'ФИО директора']);
         $this->crud->addField(['name' => 'company_title', 'label' => 'Название компании']);
@@ -68,7 +70,7 @@ class ClientCrudController extends CrudController
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
         $this->crud->removeColumns(['address_defacto', 'address_deuro', 'bank_id']);
 
-        $this->crud->setColumnDetails('client_type', ['label' => 'Тип клиента', 'type' => "model_function", 'function_name' => 'get_client_type']);
+        $this->crud->setColumnDetails('client_type_id', ['label' => 'Тип клиента', 'type' => "model_function", 'function_name' => 'getClientTypeAttribute']);
         $this->crud->setColumnDetails('chief_fio', ['label' => 'ФИО директора']);
         $this->crud->setColumnDetails('company_title', ['label' => 'Название компании']);
         $this->crud->setColumnDetails('code', ['label' => 'Код']);
@@ -127,6 +129,25 @@ class ClientCrudController extends CrudController
         // $this->crud->limit();
     }
 
+    public function index_by_client_type($type_id=1)
+    {
+        $this->crud->addClause('whereClient_type_id', $type_id);
+        $this->crud->removeColumn('client_type_id');
+        $this->crud->hasAccessOrFail('list');
+
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = ucfirst($this->crud->entity_name_plural);
+
+        // get all entries if AJAX is not enabled
+        if (! $this->data['crud']->ajaxTable()) {
+            $this->data['entries'] = $this->data['crud']->getEntries();
+        }
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        // $this->crud->getListView() returns 'list' by default, or 'list_ajax' if ajax was enabled
+        return view('crud::list', $this->data);
+    }
+
 	public function store(StoreRequest $request)
 	{
 		// your additional operations before save here
@@ -144,4 +165,19 @@ class ClientCrudController extends CrudController
         // use $this->data['entry'] or $this->crud->entry
         return $redirect_location;
 	}
+
+    public function show($id)
+    {
+        $this->crud->hasAccessOrFail('show');
+
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id);
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = trans('backpack::crud.preview').' '.$this->crud->entity_name;
+
+//        return $this->crud->getEntry($id)->cash_registers()->get();
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::show', $this->data);
+    }
 }

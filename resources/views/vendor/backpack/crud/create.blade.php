@@ -1,20 +1,20 @@
 @extends('backpack::layout')
 
 @section('header')
-	<section class="content-header">
+	{{--<section class="content-header">
 	  <h1>
 	    Новый <span class="text-lowercase">{{ $crud->entity_name }}</span>
 	  </h1>
-	</section>
+	</section>--}}
 @endsection
 
 @section('content')
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
 		<!-- Default box -->
-		@if ($crud->hasAccess('list'))
+		{{--@if ($crud->hasAccess('list'))
 			<a href="{{ url($crud->route) }}"><i class="fa fa-angle-double-left"></i> Вернуться в  <span class="text-lowercase">{{ $crud->entity_name_plural }}</span></a><br><br>
-		@endif
+		@endif--}}
 
 		  {!! Form::open(array('url' => $crud->route, 'method' => 'post', 'files'=>$crud->hasUploadFields('create'))) !!}
 		  <div class="box">
@@ -54,7 +54,7 @@
 		        </div>
 
 			  <button type="submit" class="btn btn-success ladda-button" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-save"></i> Добавить</span></button>
-		      <a href="{{ url($crud->route) }}" class="btn btn-default ladda-button" data-style="zoom-in"><span class="ladda-label">Отмена</span></a>
+		      <a onclick="history.go(-1);" class="btn btn-default ladda-button" data-style="zoom-in"><span class="ladda-label">Отмена</span></a>
 		    </div><!-- /.box-footer-->
 
 		  </div><!-- /.box -->

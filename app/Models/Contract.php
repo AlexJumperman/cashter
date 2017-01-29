@@ -22,16 +22,15 @@ class Contract extends Model
      protected $fillable = ['client_id', 'contract_id', 'date_start', 'date_end'];
     // protected $hidden = [];
     // protected $dates = [];
+//    protected $appends = ['total_pay'];
 
     /*
 	|--------------------------------------------------------------------------
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function get_company_title()
-    {
-        return $this->client()->first()->company_title;
-    }
+
+
     /*
 	|--------------------------------------------------------------------------
 	| RELATIONS
@@ -40,6 +39,10 @@ class Contract extends Model
     public function client()
     {
         return $this->belongsTo('App\Models\Client');
+    }
+
+    public function cash_registers(){
+        return $this->hasMany('App\Models\Cash_register');
     }
     /*
 	|--------------------------------------------------------------------------
@@ -52,6 +55,14 @@ class Contract extends Model
 	| ACCESORS
 	|--------------------------------------------------------------------------
 	*/
+
+    public function getTotalPayAttribute(){
+        return $this->cash_registers->sum('tariff_rate');
+    }
+
+    public function getCompanyTitleAttribute(){
+        return $this->client->company_title;
+    }
 
     /*
 	|--------------------------------------------------------------------------

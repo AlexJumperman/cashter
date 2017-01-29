@@ -16,32 +16,45 @@ class Client extends Model
 	*/
 
     //protected $table = 'clients';
-    //protected $primaryKey = 'id';
+//    protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-     protected $fillable = ['client_type', 'chief_fio', 'company_title', 'code', 'phone', 'email', 'address_defacto',
+     protected $fillable = ['client_type_id', 'chief_fio', 'company_title', 'code', 'phone', 'email', 'address_defacto',
                             'address_deuro', 'bank_id'];
-    // protected $hidden = [];
+//     protected $hidden = ['clients_type'];
     // protected $dates = [];
+//    protected $appends = ['client_type'];
 
     /*
 	|--------------------------------------------------------------------------
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function get_client_type()
-    {
-        return $this->client_type()->first()->type;
-    }
+
+
     /*
 	|--------------------------------------------------------------------------
 	| RELATIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function client_type()
+    public function clients_type()
     {
-        return $this->belongsTo('App\ClientType', 'client_type');
+        return $this->belongsTo('App\ClientsType', 'client_type_id');
     }
+
+    public function bank()
+    {
+        return $this->belongsTo('App\Models\Bank');
+    }
+
+    public function contracts(){
+        return $this->hasMany('App\Models\Contract');
+    }
+
+    public function cash_registers(){
+        return $this->hasManyThrough('App\Models\Cash_register', 'App\Models\Contract');
+    }
+
     /*
 	|--------------------------------------------------------------------------
 	| SCOPES
@@ -53,6 +66,14 @@ class Client extends Model
 	| ACCESORS
 	|--------------------------------------------------------------------------
 	*/
+
+    public function getClientTypeAttribute(){
+        return $this->clients_type->type;
+    }
+
+    public function getTotalPayAttribute(){
+        return $this->contracts->sum('total_pay');
+    }
 
     /*
 	|--------------------------------------------------------------------------

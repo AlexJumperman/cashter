@@ -1,5 +1,5 @@
 {{-- custom return value --}}
-<td>
+<td class="text-center">
 	<?php
 	    echo $entry->{$column['function_name']}();
     ?>

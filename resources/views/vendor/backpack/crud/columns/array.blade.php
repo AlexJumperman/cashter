@@ -1,5 +1,5 @@
 {{-- enumerate the values in an array  --}}
-<td>
+<td class="text-center">
     <?php
     	$value = $entry->{$column['name']};
     	// the value should be an array wether or not attribute casting is used

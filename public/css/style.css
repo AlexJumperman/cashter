@@ -1,3 +1,24 @@
 .box{
     border-radius: 3px;
 }
+
+.client-head h3{
+    font-size: 27px;
+    margin-top:10px;
+}
+
+.line-height-60{
+    line-height:60px;
+}
+
+.btn-primary{
+    color: #fff !important;
+    background-color: #3c8dbc !important;
+    border-color: #367fa9 !important;
+}
+
+.btn-primary:hover{
+    color: #fff !important;
+    background-color: #286090 !important;
+    border-color: #204d74 !important;
+}

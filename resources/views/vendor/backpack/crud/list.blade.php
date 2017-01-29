@@ -38,11 +38,11 @@
 
                 {{-- Table columns --}}
                 @foreach ($crud->columns as $column)
-                  <th>{{ $column['label'] }}</th>
+                  <th class="text-center">{{ $column['label'] }}</th>
                 @endforeach
 
                 @if ( $crud->buttons->where('stack', 'line')->count() )
-                  <th>Действия</th>
+                  <th class="text-center">Действия</th>
                 @endif
               </tr>
             </thead>
@@ -75,7 +75,7 @@
                   @endforeach
 
                   @if ($crud->buttons->where('stack', 'line')->count())
-                    <td>
+                    <td class="text-center">
                       @include('crud::inc.button_stack', ['stack' => 'line'])
                     </td>
                   @endif
@@ -93,11 +93,11 @@
 
                 {{-- Table columns --}}
                 @foreach ($crud->columns as $column)
-                  <th>{{ $column['label'] }}</th>
+                  <th class="text-center">{{ $column['label'] }}</th>
                 @endforeach
 
                 @if ( $crud->buttons->where('stack', 'line')->count() )
-                  <th>Действия</th>
+                  <th class="text-center">Действия</th>
                 @endif
               </tr>
             </tfoot>

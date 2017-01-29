@@ -22,20 +22,14 @@ class Cash_register extends Model
      protected $fillable = ['contract_id', 'title_id', 'create_number', 'fiscal_number', 'date_creation', 'date_registration', 'address', 'tariff_id'];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $appends = ['tariff_rate'];
 
     /*
 	|--------------------------------------------------------------------------
 	| FUNCTIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function get_tariff()
-    {
-        return $this->tariff()->first()->rate;
-    }
-    public function get_register_type()
-    {
-        return $this->register_type()->first()->title;
-    }
+
     /*
 	|--------------------------------------------------------------------------
 	| RELATIONS
@@ -46,10 +40,16 @@ class Cash_register extends Model
         return $this->belongsTo('App\Models\Tariff');
     }
 
-    public function register_type()
+    public function register_type_relation()
     {
         return $this->belongsTo('App\Models\Register_type', 'title_id');
     }
+
+    public function contract(){
+        return $this->belongsTo('App\Models\Contract');
+    }
+
+
     /*
 	|--------------------------------------------------------------------------
 	| SCOPES
@@ -61,6 +61,14 @@ class Cash_register extends Model
 	| ACCESORS
 	|--------------------------------------------------------------------------
 	*/
+
+    public function getTariffRateAttribute(){
+        return $this->tariff->rate;
+    }
+
+    public function getRegisterTypeAttribute(){
+        return $this->register_type_relation->title;
+    }
 
     /*
 	|--------------------------------------------------------------------------

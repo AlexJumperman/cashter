@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\ClientType;
+use App\ClientsType;
 
 class ClientTypesSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class ClientTypesSeeder extends Seeder
      */
     public function run()
     {
-        ClientType::create(['type' => 'Физическое лицо']);
-        ClientType::create(['type' => 'Юридическое лицо']);
+        ClientsType::create(['type' => 'Физическое лицо']);
+        ClientsType::create(['type' => 'Юридическое лицо']);
     }
 }

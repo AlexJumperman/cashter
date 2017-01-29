@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ClientType extends Model
+class ClientsType extends Model
 {
     public $timestamps = false;
     protected $fillable = ['type'];

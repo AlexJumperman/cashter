@@ -99,13 +99,13 @@ class Cash_registerCrudController extends CrudController
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
         $this->crud->removeColumns(['contract_id', 'address']);
-        $this->crud->setColumnDetails('title_id', ['label' => 'Наименование', 'type' => "model_function", 'function_name' => 'get_register_type']);
+        $this->crud->setColumnDetails('title_id', ['label' => 'Наименование', 'type' => "model_function", 'function_name' => 'getRegisterTypeAttribute']);
         $this->crud->setColumnDetails('create_number', ['label' => 'Заводской номер']);
         $this->crud->setColumnDetails('fiscal_number', ['label' => 'Фискальный номер']);
         $this->crud->setColumnDetails('date_creation', ['label' => 'Дата производства']);
         $this->crud->setColumnDetails('date_registration', ['label' => 'Дата регистрации']);
 //        $this->crud->setColumnDetails('address', ['label' => 'Адрес']);
-        $this->crud->setColumnDetails('tariff_id', ['label' => 'Тариф', 'type' => "model_function", 'function_name' => 'get_tariff']);
+        $this->crud->setColumnDetails('tariff_id', ['label' => 'Тариф', 'type' => "model_function", 'function_name' => 'getTariffRateAttribute']);
 
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
@@ -158,13 +158,39 @@ class Cash_registerCrudController extends CrudController
         // $this->crud->limit();
     }
 
+    public function create_with_contract_default($contract_id)
+    {
+
+        $this->crud->addField([
+            'type' => 'select2',
+            'name' => 'contract_id',
+            'value' => $contract_id,
+            'label' => 'Номер договора',
+            'entity' => 'contract_id',
+            'attribute' => 'contract_id',
+            'model' => 'App\Models\Contract'
+        ]);
+
+        $this->crud->hasAccessOrFail('create');
+
+        // prepare the fields you need to show
+        $this->data['crud'] = $this->crud;
+        $this->data['fields'] = $this->crud->getCreateFields();
+        $this->data['title'] = trans('backpack::crud.add').' '.$this->crud->entity_name;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::create', $this->data);
+    }
+
 	public function store(StoreRequest $request)
 	{
 		// your additional operations before save here
         $redirect_location = parent::storeCrud();
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
-        return $redirect_location;
+
+        return \Redirect::to(url(config('backpack.base.route_prefix', 'admin').'/client/'.$this->crud->entry->contract->client->id));
+//        return $redirect_location;
 	}
 
 	public function update(UpdateRequest $request)

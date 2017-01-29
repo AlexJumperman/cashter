@@ -24,7 +24,7 @@ class ClientsSeeder extends Seeder
 
         foreach($clients_fio as $c){
             Client::create([
-                'client_type' => rand(1,2),
+                'client_type_id' => rand(1,2),
                 'chief_fio' => $c,
                 'company_title' => 'ФОП '.explode(" ", $c)[0],
                 'code' => rand(1000000, 9999999),

@@ -22,7 +22,14 @@
           {{--<li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>--}}
 
           <!-- Clients -->
-          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/client') }}"><i class="fa fa-group text-center"></i> <span>Клиенты</span></a></li>
+          <li class="treeview">
+            <a href="#"><i class="fa fa-group text-center"></i> <span>Клиенты</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+              <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/client') }}"><i class="fa fa-group"></i> <span>Все клиенты</span></a></li>
+              <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/client_type/1') }}"><i class="fa fa-user"></i> <span>Физические лица</span></a></li>
+              <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/client_type/2') }}"><i class="fa fa-user-secret"></i> <span>Юридические лица</span></a></li>
+            </ul>
+          </li>
 
           <!-- Contracts -->
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/contract') }}"><i class="fa fa-files-o text-center"></i> <span>Договоры</span></a></li>
@@ -37,7 +44,7 @@
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/tariff') }}"><i class="fa fa-usd text-center"></i> <span>Тарифы</span></a></li>
 
           <!-- Cash Register Types -->
-          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/register_type') }}"><i class="fa fa-calculator text-center"></i> <span>Типы Аппаратов</span></a></li>
+          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/register_type') }}"><i class="fa fa-fax text-center"></i> <span>Типы Аппаратов</span></a></li>
 
           {{--<li class="header text-center">---</li>--}}
 

@@ -13,7 +13,7 @@ class CreateClientTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_types', function (Blueprint $table) {
+        Schema::create('clients_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
         });
@@ -26,6 +26,6 @@ class CreateClientTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('client_types');
+        Schema::drop('clients_types');
     }
 }

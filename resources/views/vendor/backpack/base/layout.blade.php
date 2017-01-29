@@ -126,9 +126,9 @@
             });
 
         // Set active state on menu element
-        var current_url = "{{ url(Route::current()->getUri()) }}";
+        var current_url = "{{ Request::url() }}";
         $("ul.sidebar-menu li a").each(function() {
-          if ($(this).attr('href').startsWith(current_url) || current_url.startsWith($(this).attr('href')))
+          if ($(this).attr('href') == current_url)
           {
             $(this).parents('li').addClass('active');
           }

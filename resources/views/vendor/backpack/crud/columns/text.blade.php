@@ -1,2 +1,2 @@
 {{-- regular object attribute --}}
-<td>{{ str_limit(strip_tags($entry->{$column['name']}), 80, "[...]") }}</td>
+<td class="text-center">{{ str_limit(strip_tags($entry->{$column['name']}), 80, "[...]") }}</td>
