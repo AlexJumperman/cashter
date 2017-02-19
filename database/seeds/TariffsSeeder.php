@@ -12,10 +12,9 @@ class TariffsSeeder extends Seeder
      */
     public function run()
     {
-        Tariff::create(['rate' => 100]);
-        Tariff::create(['rate' => 150]);
-        Tariff::create(['rate' => 200]);
-        Tariff::create(['rate' => 250]);
-        Tariff::create(['rate' => 300]);
+        $tariffs = [100, 150, 200, 250, 300];
+        foreach($tariffs as $tariff){
+            Tariff::create(['rate' => $tariff]);
+        }
     }
 }

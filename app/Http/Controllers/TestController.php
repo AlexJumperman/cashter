@@ -9,10 +9,12 @@ use App\Models\Contract;
 
 class TestController extends Controller
 {
-    public function index(){
+    public function index(Client $id){
 //        $contract = Contract::find(3);
 //        $register = Cash_register::first();
-        $client = Client::find(2);
-        return $client->client_type;
+//        $client = Client::find(2);
+
+//        return response()->json($id->pays->pluck('pay_month')->search('2017-01-01'));
+        return response()->json($id->contractsPeriod);
     }
 }

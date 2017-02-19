@@ -17,8 +17,13 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    {{--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">--}}
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/bootstrap/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    {{--<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">--}}
+    {{--<link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/bootstrap/css/ionicons.min.css">--}}
+
 
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
@@ -30,6 +35,11 @@
     <!-- BackPack Base CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/backpack/backpack.base.css') }}">
 
+    {{--<link rel="stylesheet" href="{{ url('/') }}/css/tabella/normalize.min.css">--}}
+    <link rel="stylesheet" href="{{ url('/') }}/css/tabella/home.css">
+    <link rel="stylesheet" href="{{ url('/') }}/css/tabella/tabella.css">
+
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url('/') }}/css/style.css">
 
@@ -38,8 +48,8 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
     <![endif]-->
 </head>
 <body class="hold-transition {{ config('backpack.base.skin') }} sidebar-mini">
@@ -104,7 +114,8 @@
     @yield('before_scripts')
 
     <!-- jQuery 2.2.0 -->
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    {{--<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>--}}
+    <script src="{{ asset('vendor/adminlte') }}/bootstrap/js/jquery-2.2.0.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ asset('vendor/adminlte') }}/plugins/jQuery/jQuery-2.2.0.min.js"><\/script>')</script>
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ asset('vendor/adminlte') }}/bootstrap/js/bootstrap.min.js"></script>

@@ -55,6 +55,10 @@ class Client extends Model
         return $this->hasManyThrough('App\Models\Cash_register', 'App\Models\Contract');
     }
 
+    public function pays(){
+        return $this->hasMany('App\Pay');
+    }
+
     /*
 	|--------------------------------------------------------------------------
 	| SCOPES
@@ -73,6 +77,14 @@ class Client extends Model
 
     public function getTotalPayAttribute(){
         return $this->contracts->sum('total_pay');
+    }
+
+    public function getContractsPeriodAttribute(){
+        $start    = new \DateTime('2016-01-01');
+        $end      = new \DateTime('2018-01-01');
+        $interval = \DateInterval::createFromDateString('1 month');
+        $period   = new \DatePeriod($start, $interval, $end);
+        return $period;
     }
 
     /*

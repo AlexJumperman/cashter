@@ -282,77 +282,227 @@
         <!-- /.box-body -->
     </div>
 
-<!-- Button trigger modal -->
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    Тестовая оплата
-</button>
+<div class="box box-default box-solid">
+    <div class="box-header with-border">
+        <h4 class="box-title">Оплата</h4>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
+        <!-- /.box-tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body" style="display: block;">
+
+
+        <div id="tabella" class="tabella-ctr"></div>
+
+
+    </div>
+    <!-- /.box-body -->
+</div>
+
+<div class="box box-default box-solid">
+    <div class="box-header with-border">
+        <h4 class="box-title">История оплаты</h4>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
+        <!-- /.box-tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body" style="display: block;">
+        <table id="payHistory" class="table table-bordered table-striped display">
+            <thead>
+                <tr>
+                    <th>№ Платежа</th>
+                    <th>Тип Платежа</th>
+                    <th>Период</th>
+                    <th>Дата оплаты</th>
+                    <th>Сумма</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($entry->pays as $pay)
+                <tr>
+                    <td>{{ $pay->id }}</td>
+                    <td>{{ $pay->pay_type->type }}</td>
+                    <td>{{ $pay->pay_month }}</td>
+                    <td>{{ $pay->created_at }}</td>
+                    <td>{{ $pay->pay_sum }}</td>
+                    <td></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>
 
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+
+@foreach($entry->contractsPeriod as $period)
+<div class="modal fade bs-example-modal-lg" id="{{ $period->format("Y-m") }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Оплата</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-hover">
-                    <tbody><tr>
-                        <th>Аппарат</th>
-                        <th>Тариф</th>
-                        <th>11-2016<br>ноябрь</th>
-                        <th>12-2016<br>декабрь</th>
-                        <th>01-2017<br>январь</th>
-                        <th>02-2017<br>февраль</th>
-                        <th>03-2017<br>март</th>
-                    </tr>
-                    <tr>
-                        <td>Era</td>
-                        <td>150</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Era</td>
-                        <td>250</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Era</td>
-                        <td>250</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Era</td>
-                        <td>300</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                    </tr>
-                    </tbody></table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Оплатить</button>
-            </div>
+            <form method="POST" action="/pay">
+                <input type="hidden" name="client_id" value="{{ $entry->id }}">
+                <input type="hidden" name="pay_type_id" value="1">
+                <input type="hidden" name="pay_month" value="{{ $period->format("Y-m-d") }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Оплата за {{ $period->format("m - Y") }}</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>№ Договора</th>
+                            <th>Аппарат</th>
+                            <th>Тариф</th>
+                            <th>Статус оплаты</th>
+                        </tr>
+                        @foreach($entry->contracts()->get() as $contract)
+                            @foreach($contract->cash_registers()->get() as $cash_register)
+                                <tr>
+                                    <td>{{ $contract->contract_id }}</td>
+                                    <td>{{ $cash_register->register_type }}</td>
+                                    <td>{{ $cash_register->tariff_rate }}</td>
+
+                                    @if($cash_register->pays->pluck('pay_month')->search( $period->format("Y-m-d") ) !== false)
+                                        <td><i class="fa fa-check-square-o"></i></td>
+                                    @else
+                                        <td><input type="checkbox" name="cash_registers[]" value="{{ $cash_register->id }}"></td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endforeach
+
+                        </tbody></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Оплатить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+@endforeach
+
+
+@section('after_styles')
+    <link href="{{ asset('vendor/adminlte/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
+@endsection
 
 @section('after_scripts')
+
+    <!-- DATA TABLES SCRIPT -->
+    <script src="{{ asset('vendor/adminlte/plugins/datatables/jquery.dataTables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('vendor/adminlte/plugins/datatables/dataTables.bootstrap.js') }}" type="text/javascript"></script>
+
+    <script>
+    jQuery(document).ready(function($) {
+
+        var table = $("#payHistory").DataTable({
+            "pageLength": 10,
+            /* Disable initial sort */
+            "aaSorting": [],
+            "language": {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+            }
+        });
+    });
+    </script>
+<!-- CRUD LIST CONTENT - crud_list_scripts stack -->
+@stack('crud_list_scripts')
+
+    <script src="{{ url('/') }}/js/tabella/tabella.js"></script>
+    <script>
+        var tabellaCtr = document.getElementById('tabella');
+
+        var data = {};
+
+        data.tableHeader = [
+                @foreach($entry->contractsPeriod as $period)
+                    ['<button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#{{ $period->format("Y-m") }}">{{ $period->format("m - Y") }}</button>'],
+                @endforeach
+        ];
+
+        data.rows = [
+            @foreach($entry->contracts()->get() as $contract)
+                {
+                    rowHeader: '<h4>Договор № {{ $contract->contract_id }}</h4>',
+                    rowVal: [
+                        @foreach($contract->cash_registers()->get() as $cash_register)
+                            [
+                                @foreach($entry->contractsPeriod as $period)
+                                    @if($cash_register->pays->pluck('pay_month')->search( $period->format("Y-m-d") ) !== false)
+                                        '<i class="fa fa-check-square-o">',
+                                    @else
+                                        '<i class="fa fa-square-o">',
+                                    @endif
+                                @endforeach
+                            ],
+                        @endforeach
+                    ],
+                    rowDesc: [
+                        @foreach($contract->cash_registers()->get() as $cash_register)
+                            '{{ $cash_register->register_type }}',
+                        @endforeach
+                    ]
+                },
+            @endforeach
+        ];
+
+        data.cellBreakpoints = {
+            default: [1, 5]
+        };
+
+        data.from = '';
+        data.to = '';
+        data.currency = '';
+        data.duration = 100;
+        data.reboundSpeed = 2000;
+        data.swipeSingleTick = false;
+
+        table = new Tabella(tabellaCtr, data);
+
+        function goToCurrentMonth(){
+            if(table.currentCellWidth > 0){
+                table.move(10 * table.currentCellWidth);
+            }else{
+                setTimeout(goToCurrentMonth, 1000);
+            }
+        }
+
+        goToCurrentMonth();
+
+    </script>
 
     <script type="text/javascript">
         jQuery(document).ready(function($) {
@@ -403,7 +553,7 @@
                 });
             }
 
-            });
+        });
     </script>
 
 @endsection

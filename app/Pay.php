@@ -1,28 +1,24 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Backpack\CRUD\CrudTrait;
 
-class Cash_register extends Model
+class Pay extends Model
 {
-    use CrudTrait;
-
-     /*
+    /*
 	|--------------------------------------------------------------------------
 	| GLOBAL VARIABLES
 	|--------------------------------------------------------------------------
 	*/
 
-    //protected $table = 'cash_registers';
+    //protected $table = 'banks';
     //protected $primaryKey = 'id';
     // public $timestamps = false;
     // protected $guarded = ['id'];
-     protected $fillable = ['contract_id', 'title_id', 'create_number', 'fiscal_number', 'date_creation', 'date_registration', 'address', 'tariff_id'];
+    protected $fillable = ['pay_month', 'pay_type_id', 'client_id'];
     // protected $hidden = [];
     // protected $dates = [];
-    protected $appends = ['tariff_rate'];
 
     /*
 	|--------------------------------------------------------------------------
@@ -35,24 +31,14 @@ class Cash_register extends Model
 	| RELATIONS
 	|--------------------------------------------------------------------------
 	*/
-    public function tariff()
-    {
-        return $this->belongsTo('App\Models\Tariff');
+
+    public function pay_type(){
+        return $this->belongsTo('App\Pay_type');
     }
 
-    public function register_type_relation()
-    {
-        return $this->belongsTo('App\Models\Register_type', 'title_id');
+    public function cash_registers(){
+        return $this->belongsToMany('App\Models\Cash_register', 'pay_cash_register');
     }
-
-    public function contract(){
-        return $this->belongsTo('App\Models\Contract');
-    }
-
-    public function pays(){
-        return $this->belongsToMany('App\Pay', 'pay_cash_register');
-    }
-
 
     /*
 	|--------------------------------------------------------------------------
@@ -66,12 +52,8 @@ class Cash_register extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-    public function getTariffRateAttribute(){
-        return $this->tariff->rate;
-    }
-
-    public function getRegisterTypeAttribute(){
-        return $this->register_type_relation->title;
+    public function getPaySumAttribute(){
+        return $this->cash_registers->sum('tariff_rate');
     }
 
     /*

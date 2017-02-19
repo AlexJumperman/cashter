@@ -12,10 +12,9 @@ class BanksSeeder extends Seeder
      */
     public function run()
     {
-        Bank::create(['title' => 'Приват', 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
-        Bank::create(['title' => 'Аваль', 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
-        Bank::create(['title' => 'Ощад', 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
-        Bank::create(['title' => 'Дельта', 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
-        Bank::create(['title' => 'Пумб', 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
+        $banks = ['Приват', 'Аваль', 'Ощад', 'Дельта', 'Пумб'];
+        foreach($banks as $bank){
+            Bank::create(['title' => $bank, 'mfo' => rand(1000000, 9999999), 'account' => rand(1000000, 9999999)]);
+        }
     }
 }

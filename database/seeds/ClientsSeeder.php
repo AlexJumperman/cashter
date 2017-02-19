@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
+
 use App\Models\Client;
+use App\ClientsType;
+use App\Models\Bank;
 
 class ClientsSeeder extends Seeder
 {
@@ -24,26 +27,16 @@ class ClientsSeeder extends Seeder
 
         foreach($clients_fio as $c){
             Client::create([
-                'client_type_id' => rand(1,2),
+                'client_type_id' => ClientsType::all()->random()->id,
                 'chief_fio' => $c,
                 'company_title' => 'ФОП '.explode(" ", $c)[0],
                 'code' => rand(1000000, 9999999),
                 'phone' => rand(1000000, 9999999),
-                'email' => $this->generateRandomString(5)."@gmail.com",
-                'address_defacto' => $this->generateRandomString(30),
-                'address_deuro' => $this->generateRandomString(30),
-                'bank_id' => rand(1,5)
+                'email' => str_random(5)."@gmail.com",
+                'address_defacto' => str_random(30),
+                'address_deuro' => str_random(30),
+                'bank_id' => Bank::all()->random()->id
             ]);
         }
-    }
-
-    private function generateRandomString($length = 5) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
     }
 }
