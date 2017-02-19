@@ -351,7 +351,7 @@
         <div class="modal-content">
             <form method="POST" action="/pay">
                 <input type="hidden" name="client_id" value="{{ $entry->id }}">
-                <input type="hidden" name="pay_type_id" value="1">
+                {{--<input type="hidden" name="pay_type_id" value="1">--}}
                 <input type="hidden" name="pay_month" value="{{ $period->format("Y-m-d") }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="modal-header">
@@ -359,35 +359,58 @@
                     <h4 class="modal-title" id="myModalLabel">Оплата за {{ $period->format("m - Y") }}</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label>Тип оплаты</label>
+                        <select class="form-control" name="pay_type_id">
+                            <option value="1">Наличный расчет</option>
+                            <option value="2">Безналичный расчет</option>
+                        </select>
+                    </div>
+
+
                     <table class="table table-hover">
                         <tbody>
                         <tr>
-                            <th>№ Договора</th>
-                            <th>Аппарат</th>
-                            <th>Тариф</th>
-                            <th>Статус оплаты</th>
+                            {{--<th class="text-center">№ Договора</th>--}}
+                            <th class="text-center">Аппарат</th>
+                            <th class="text-center">Заводской номер</th>
+                            <th class="text-center">Тариф</th>
+                            <th class="text-center">Статус оплаты</th>
                         </tr>
                         @foreach($entry->contracts()->get() as $contract)
                             @foreach($contract->cash_registers()->get() as $cash_register)
                                 <tr>
-                                    <td>{{ $contract->contract_id }}</td>
-                                    <td>{{ $cash_register->register_type }}</td>
-                                    <td>{{ $cash_register->tariff_rate }}</td>
+                                    {{--<td class="text-center">{{ $contract->contract_id }}</td>--}}
+                                    <td class="text-center">{{ $cash_register->register_type }}</td>
+                                    <td class="text-center">{{ $cash_register->create_number }}</td>
+                                    <td class="text-center">{{ $cash_register->tariff_rate }}</td>
 
                                     @if($cash_register->pays->pluck('pay_month')->search( $period->format("Y-m-d") ) !== false)
-                                        <td><i class="fa fa-check-square-o"></i></td>
+                                        <td class="text-center"><i class="fa fa-check-square-o"></i></td>
                                     @else
-                                        <td><input type="checkbox" name="cash_registers[]" value="{{ $cash_register->id }}"></td>
+                                        <td class="text-center"><input type="checkbox" name="cash_registers[]" class="js-pay-checkbox" data-period="{{ $period->format("Y-m") }}" data-tariff="{{ $cash_register->tariff_rate }}" value="{{ $cash_register->id }}"></td>
                                     @endif
                                 </tr>
                             @endforeach
                         @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center"><input type="checkbox" class="js-select-all" data-period="{{ $period->format("Y-m") }}"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">Всего</td>
+                            <td></td>
+                            <td class="text-center">{{ $entry->totalPay }}</td>
+                            <td class="text-center" id="total-in-current-{{ $period->format("Y-m") }}">0</td>
+                        </tr>
 
                         </tbody></table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">Оплатить</button>
+                    <button type="submit" class="btn btn-primary" id="pay-{{ $period->format("Y-m") }}" style="display: none">Оплатить</button>
                 </div>
             </form>
         </div>
@@ -405,13 +428,13 @@
     <!-- DATA TABLES SCRIPT -->
     <script src="{{ asset('vendor/adminlte/plugins/datatables/jquery.dataTables.js') }}" type="text/javascript"></script>
     <script src="{{ asset('vendor/adminlte/plugins/datatables/dataTables.bootstrap.js') }}" type="text/javascript"></script>
-
     <script>
     jQuery(document).ready(function($) {
 
         var table = $("#payHistory").DataTable({
             "pageLength": 10,
             /* Disable initial sort */
+            "order": [[ 3, "desc" ]],
             "aaSorting": [],
             "language": {
                 "processing": "Подождите...",
@@ -438,9 +461,8 @@
         });
     });
     </script>
-<!-- CRUD LIST CONTENT - crud_list_scripts stack -->
-@stack('crud_list_scripts')
 
+    <!-- Tabella scripts -->
     <script src="{{ url('/') }}/js/tabella/tabella.js"></script>
     <script>
         var tabellaCtr = document.getElementById('tabella');
@@ -494,7 +516,7 @@
 
         function goToCurrentMonth(){
             if(table.currentCellWidth > 0){
-                table.move(10 * table.currentCellWidth);
+                table.move({{ $entry->monthCountToCurrentDate }} * table.currentCellWidth);
             }else{
                 setTimeout(goToCurrentMonth, 1000);
             }
@@ -504,7 +526,8 @@
 
     </script>
 
-    <script type="text/javascript">
+    <!-- Ajax deleting -->
+    <script>
         jQuery(document).ready(function($) {
 
             // make the delete button work in the first result page
@@ -556,4 +579,39 @@
         });
     </script>
 
+    <!-- Modal payment logic -->
+    <script>
+        $('.js-pay-checkbox').change(function(){
+            current_value = $('#total-in-current-'+$(this).attr('data-period')).html();
+            if($(this).is(':checked')) {
+                $('#total-in-current-' + $(this).attr('data-period')).html(Number(current_value) + Number($(this).attr('data-tariff')));
+            }else{
+                $('#total-in-current-' + $(this).attr('data-period')).html(Number(current_value) - Number($(this).attr('data-tariff')));
+            }
+            checkPayButton($(this).attr('data-period'));
+        });
+
+        $('.js-select-all').change(function(){
+            if($(this).is(':checked')) {
+                summ = 0;
+                $('.js-pay-checkbox[data-period=' + $(this).attr('data-period') + ']').prop('checked', true);
+                $('.js-pay-checkbox[data-period=' + $(this).attr('data-period') + ']').each(function(){
+                     summ = summ + Number($(this).attr('data-tariff'));
+                });
+                $('#total-in-current-' + $(this).attr('data-period')).html(summ);
+            }else{
+                $('.js-pay-checkbox[data-period=' + $(this).attr('data-period') + ']').prop('checked', false);
+                $('#total-in-current-' + $(this).attr('data-period')).html(0);
+            }
+            checkPayButton($(this).attr('data-period'));
+        });
+
+        function checkPayButton(period){
+            if($('#total-in-current-' + period).html() != 0){
+                $('#pay-' + period).show();
+            }else{
+                $('#pay-' + period).hide();
+            }
+        }
+    </script>
 @endsection

@@ -15,6 +15,6 @@ class TestController extends Controller
 //        $client = Client::find(2);
 
 //        return response()->json($id->pays->pluck('pay_month')->search('2017-01-01'));
-        return response()->json($id->contractsPeriod);
+        return $id->monthCountToCurrentDate;
     }
 }

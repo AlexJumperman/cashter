@@ -80,11 +80,18 @@ class Client extends Model
     }
 
     public function getContractsPeriodAttribute(){
-        $start    = new \DateTime('2016-01-01');
-        $end      = new \DateTime('2018-01-01');
+        $start    = new \DateTime($this->contracts->pluck('date_start')->min());
+        $end      = new \DateTime('+1 year');
         $interval = \DateInterval::createFromDateString('1 month');
         $period   = new \DatePeriod($start, $interval, $end);
         return $period;
+    }
+
+    public function getMonthCountToCurrentDateAttribute(){
+        $start    = new \DateTime($this->contracts->pluck('date_start')->min());
+        $end      = new \DateTime();
+        $diff = $end->diff($start);
+        return $diff->format('%y') * 12 + $diff->format('%m') - 2;
     }
 
     /*
